@@ -7,35 +7,39 @@ trap '' SIGINT SIGQUIT SIGTSTP
 
 # functions
 
-br() {
+nl() {
 	printf "\n"
 }
 
+tab() {
+	printf "\t"
+}
+
 pressEnter() {
-	br && read -p "Press Enter to continue..." fackEnterKey
+	nl && read -p "Press Enter to continue..." fackEnterKey
 }
 
 makeSure() {
-	local sure && read -p "Are you sure? [Y/*]: " sure
+	local sure && read -p "Are you sure? [y/n]: " sure
 	case $sure in
-		Y) clear && return 0;;
+		y) clear && return 0;;
 		*) echo "Task aborted" && pressEnter && return 1
 	esac
 }
 
 showMenu() {
 	clear
-	echo "Server Administration Menu $samVersion" && br
+	echo "Server Administration Menu $samVersion" && nl
 	echo "Host: $(hostname) ($(cat /etc/issue))"
 	echo "Status: $(uptime)" 
 	
-	br # Menu start
+	nl # Menu start
 	echo "1. File manager"
 	echo "2. CPU load"
 	echo "3. Disk load"
 	echo "4. Google DNS"
 	echo "0. Exit"
-	br # Menu end
+	nl # Menu end
 }
 
 selectTask(){
