@@ -35,9 +35,7 @@ showHelp() {
 }
 
 tryUpdate() {
-	curl -so "./$self" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$self"
-	sudo chmod +x "./$self"
-	pressEnter && exec "./$self"
+	curl -so "./$self" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$self" && sudo chmod +x "./$self" && pressEnter && exec "./$self"
 }
 
 showAbout() {
@@ -81,7 +79,7 @@ selectTask(){
 		?) showHelp && pressEnter;;
 		
 		# Help
-		update) tryUpdate && pressEnter;;
+		update) makeSure && tryUpdate;;
 		about) showAbout && pressEnter;;
 		
 		# Error
