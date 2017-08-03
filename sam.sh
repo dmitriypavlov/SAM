@@ -35,13 +35,13 @@ showHelp() {
 }
 
 tryUpdate() {
-	curl -so $self "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$self"
-	sudo chmod +x $self
-	pressEnter && exec $self
+	curl -so "./$self" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$self"
+	sudo chmod +x "./$self"
+	pressEnter && exec "./$self"
 }
 
 showAbout() {
-	echo "Version $samVersion ($script)"
+	echo "Version $samVersion ($self)"
 }
 
 showMenu() {
