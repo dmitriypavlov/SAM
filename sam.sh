@@ -2,6 +2,7 @@
 
 samVersion="2.1"
 
+self="${0##*/}"
 cd "${0%/*}"
 trap '' SIGINT SIGQUIT SIGTSTP
 
@@ -34,13 +35,13 @@ showHelp() {
 }
 
 tryUpdate() {
-	curl -so "./sam.sh" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh"
-	sudo chmod +x "./sam.sh"
-	exec "./sam.sh"
+	curl -so $self "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$self"
+	sudo chmod +x $self
+	pressEnter && exec $self
 }
 
 showAbout() {
-	echo "Version $samVersion"
+	echo "Version $samVersion ($script)"
 }
 
 showMenu() {
