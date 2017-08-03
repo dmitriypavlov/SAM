@@ -74,15 +74,12 @@ selectTask(){
 		3) makeSure && iotop && pressEnter;;
 		4) makeSure && ping 8.8.8.8 && pressEnter;;
 		
-		# System
 		0) makeSure && exit 0;;
 		?) showHelp && pressEnter;;
 		
-		# Help
 		update) makeSure && tryUpdate;;
 		about) showAbout && pressEnter;;
 		
-		# Error
 		*) echo "${bold}Pardon?${normal}" && sleep 1
 	esac
 }
