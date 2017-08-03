@@ -1,37 +1,42 @@
 #/bin/bash
 
-samVersion="2.0"
+samVersion="2.1"
 
-cd $(dirname $0)
+cd "${0%/*}"
 trap '' SIGINT SIGQUIT SIGTSTP
 
 # functions
+
+bold=$(tput bold)
+normal=$(tput sgr0)
 
 nl() {
 	printf "\n"
 }
 
 pressEnter() {
-	nl && read -p "Press Enter to continue..." fackEnterKey
+	nl && read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
 }
 
 makeSure() {
-	local sure && read -p "Are you sure? [Y/n]: " sure
+	local sure && read -p "${bold}Are you sure? [Y/n]:${normal} " sure
 	case $sure in
 		[yY]) clear && return 0;;
-		*) echo "Task aborted" && pressEnter && return 1
+		*) echo "${bold}Task aborted${normal}" && pressEnter && return 1
 	esac
 }
 
 showHelp() {
-	clear && echo -e "Additional tasks:
+	clear && echo -e "${bold}Additional tasks${normal}
 	
 	update)		Perform online update
 	about)		About SAM"
 }
 
 tryUpdate() {
-	echo "Update complete!"
+	curl -so "./sam.sh" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh"
+	sudo chmod +x "./sam.sh"
+	exec "./sam.sh"
 }
 
 showAbout() {
@@ -40,11 +45,11 @@ showAbout() {
 
 showMenu() {
 	clear
-	echo "Server Administration Menu $samVersion" && nl
+	echo "${bold}Server Administration Menu $samVersion${normal}" && nl
 	echo "Host: $(hostname) ($(cat /etc/issue))"
 	echo "Status: $(uptime)" 
 	
-	# Menu start
+	# Menu
 	echo -e "
 	1) File manager		10) Task 10
 	2) CPU load		11) Task 11
@@ -57,25 +62,29 @@ showMenu() {
 	9) Task 9		18) Task 18
 	
 	0) Exit			?) Help
-	" # Menu end
+	"
 }
 
 selectTask(){
-	local task && read -p "Select task: " task
+	local task && read -p "${bold}Select task:${normal} " task
 	case $task in
 	
-		# Task start
+		# Tasks
 		1) makeSure && mc && pressEnter;;
 		2) makeSure && top && pressEnter;;
 		3) makeSure && iotop && pressEnter;;
 		4) makeSure && ping 8.8.8.8 && pressEnter;;
 		0) makeSure && exit 0;;
+		
+		# System
 		?) showHelp && pressEnter;;
+		
+		# Help
 		update) tryUpdate && pressEnter;;
 		about) showAbout && pressEnter;;
-		# Task end
-
-		*) echo "Pardon?" && sleep 1
+		
+		# Error
+		*) echo "${bold}Pardon?${normal}" && sleep 1
 	esac
 }
  
