@@ -73,9 +73,9 @@ selectTask(){
 		2) makeSure && top && pressEnter;;
 		3) makeSure && iotop && pressEnter;;
 		4) makeSure && ping 8.8.8.8 && pressEnter;;
-		0) makeSure && exit 0;;
 		
 		# System
+		0) makeSure && exit 0;;
 		?) showHelp && pressEnter;;
 		
 		# Help
