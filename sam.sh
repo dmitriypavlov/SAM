@@ -32,8 +32,8 @@ makeSure() {
 showHelp() {
 	clear && echo "${bold}${invert} Additional tasks ${normal}
 	
-	install		Install to .bash_profile
-	uninstall	Uninstall from .bash_profile
+	install		Install to $profile
+	uninstall	Uninstall from $profile
 	update		Perform online update
 	about		About SAM"
 }
