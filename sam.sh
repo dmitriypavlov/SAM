@@ -46,7 +46,8 @@ makeInstall() {
 }
 
 makeUninstall() {
-	sed -i '' '/sam/d' $profile # sed -i '/sam/d' $profile
+	sed -i '/sam/d' $profile
+	sed -i '' '/sam/d' $profile # macOS
 }
 
 makeUpdate() {
