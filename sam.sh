@@ -1,4 +1,4 @@
-#/bin/bash
+#!/usr/bin/env bash
 
 samVersion="2.2"
 samPath="${0%/*}"
@@ -30,7 +30,7 @@ makeSure() {
 }
 
 showHelp() {
-	clear && echo -e "${bold}Additional tasks${normal}
+	clear && echo "${bold}${invert} Additional tasks ${normal}
 	
 	install		Install to .bash_profile
 	uninstall	Uninstall from .bash_profile
@@ -42,12 +42,12 @@ makeInstall() {
 	if [ ! -e $profile.bak ]; then
 		cp $profile $profile.bak
 	fi
-	echo -e "\nalias sam=$samPath/$samFile\nsam" >> $profile
+	echo -e "\nalias sam=\"'$samPath/$samFile'\"\nsam" >> $profile
+	sudo chmod +x "$samPath/$samFile"
 }
 
 makeUninstall() {
-	sed -i '/sam/d' $profile
-	sed -i '' '/sam/d' $profile # macOS
+	sed -i '/sam/d' $profile || sed -i '' '/sam/d' $profile # macOS
 }
 
 makeUpdate() {
@@ -65,10 +65,9 @@ showMenu() {
 	echo "Status: $(uptime)" 
 	
 	# Menu
-	echo -e "
-	1) File manager		2) Google DNS
-	
-	0) Exit			?) Help
+	echo "
+	?) Help		0) Exit
+	1) Task 1	2) Task 2
 	"
 }
 
@@ -77,8 +76,8 @@ selectTask(){
 	case $task in
 	
 		# Tasks
-		1) makeSure && mc && pressEnter;;
-		2) makeSure && ping 8.8.8.8 && pressEnter;;
+		1) makeSure && echo "Task 1 selected" && pressEnter;;
+		2) makeSure && echo "Task 2 selected" && pressEnter;;
 		
 		0) makeSure && exit 0;;
 		\?) showHelp && pressEnter;;
