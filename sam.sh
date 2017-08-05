@@ -4,6 +4,8 @@ samVersion="2.1"
 samPath="${0%/*}"
 samFile="${0##*/}"
 
+profile=~/.bash_profile
+
 # functions
 
 bold=$(tput bold)
@@ -40,11 +42,11 @@ makeInstall() {
 	if [ ! -e $profile.bak ]; then
 		cp $profile $profile.bak
 	fi
-	echo -e "\nalias sam=$samPath/$samFile\nsam" >> ~/.bash_profile
+	echo -e "\nalias sam=$samPath/$samFile\nsam" >> $profile
 }
 
 makeUninstall() {
-	sed -i '' '/sam/d' ~/.bash_profile # sed -i '/sam/d' ~/.bash_profile
+	sed -i '' '/sam/d' $profile # sed -i '/sam/d' $profile
 }
 
 makeUpdate() {
