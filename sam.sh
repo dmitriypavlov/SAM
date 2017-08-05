@@ -2,11 +2,8 @@
 
 samVersion="2.1"
 
-
-dir="${0%/*}"
+dir="${0%/*}" && cd $dir
 self="${0##*/}"
-
-cd dir
 
 trap '' SIGINT SIGQUIT SIGTSTP
 
