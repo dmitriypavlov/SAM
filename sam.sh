@@ -9,6 +9,8 @@ trap '' SIGINT SIGQUIT SIGTSTP
 # functions
 
 bold=$(tput bold)
+red=$(tput setaf 1)
+invert=$(tput rev)
 normal=$(tput sgr0)
 
 nl() {
@@ -23,7 +25,7 @@ makeSure() {
 	local sure && read -p "${bold}Are you sure? [Y/n]:${normal} " sure
 	case $sure in
 		[yY]) clear && return 0;;
-		*) echo "${bold}Task aborted${normal}" && pressEnter && return 1
+		*) echo "${bold}${red}Task aborted${normal}" && pressEnter && return 1
 	esac
 }
 
@@ -44,7 +46,7 @@ showAbout() {
 
 showMenu() {
 	clear
-	echo "${bold}Server Administration Menu $samVersion${normal}" && nl
+	echo "${bold}${invert} Server Administration Menu $samVersion ${normal}" && nl
 	echo "Host: $(hostname) ($(cat /etc/issue))"
 	echo "Status: $(uptime)" 
 	
@@ -79,8 +81,9 @@ selectTask(){
 		
 		update) makeSure && tryUpdate;;
 		about) showAbout && pressEnter;;
+		q) exit 0;;
 		
-		*) echo "${bold}Pardon?${normal}" && sleep 1
+		*) echo "${bold}${red}Pardon?${normal}" && sleep 1
 	esac
 }
  
