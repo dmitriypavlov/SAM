@@ -2,10 +2,12 @@
 
 samVersion="2.1"
 
-dir="${0%/*}" && cd dir
+dir="${0%/*}" && cd $dir
 self="${0##*/}"
+sam="$dir/$self"
+profile=~/.bash_profile
 
-#trap '' SIGINT SIGQUIT SIGTSTP
+trap '' SIGINT SIGQUIT SIGTSTP
 
 # functions
 
@@ -39,10 +41,7 @@ showHelp() {
 	about)		About SAM"
 }
 
-tryInstall() {
-	sam=$dir/$self
-	profile=~/.bash_profile
-	
+makeInstall() {
 	if [ ! -e $profile.bak ]; then
 		cp $profile $profile.bak
 	fi
@@ -50,7 +49,7 @@ tryInstall() {
 	echo -e "\nalias sam=$sam\nsam" >> $profile
 }
 
-tryUninstall() {
+makeUninstall() {
 	sam=$dir/$self
 	profile=~/.bash_profile
 	
@@ -58,7 +57,7 @@ tryUninstall() {
 	# sed -i '/sam/d' $profile
 }
 
-tryUpdate() {
+makeUpdate() {
 	curl -so "./$self" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$self" && sudo chmod +x "./$self" && pressEnter && exec "./$self"
 }
 
@@ -91,9 +90,9 @@ selectTask(){
 		0) makeSure && exit 0;;
 		\?) showHelp && pressEnter;;
 		
-		install) makeSure && tryInstall;;
-		uninstall) makeSure && tryUninstall;;
-		update) makeSure && tryUpdate;;
+		install) makeSure && makeInstall;;
+		uninstall) makeSure && makeUninstall;;
+		update) makeSure && makeUpdate;;
 		about) showAbout && pressEnter;;
 		q) exit 0;;
 		
