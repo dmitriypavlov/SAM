@@ -39,7 +39,7 @@ showHelp() {
 }
 
 makeInstall() {
-	echo -e "alias sam=\"'$samPath/$samFile'\"\nsam" >> $profile
+	echo -e "alias sam='$samPath/$samFile'\nsam" >> $profile
 	sudo chmod +x "$samPath/$samFile"
 }
 
@@ -48,7 +48,7 @@ makeUninstall() {
 }
 
 makeUpdate() {
-	curl -so "$samPath/$samFile" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$samFile" && sudo chmod +x "$samPath/$samFile" && pressEnter && exec "$samPath/$samFile"
+	curl -so "$samPath/$samFile" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$samFile" && pressEnter && exec "$samPath/$samFile"
 }
 
 showAbout() {
