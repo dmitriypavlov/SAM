@@ -2,9 +2,9 @@
 
 samVersion="2.1"
 
-dir="${0%/*}" && cd $dir
-self="${0##*/}"
-sam="$dir/$self"
+samPath="${0%/*}" && cd $samPath
+samFile="${0##*/}"
+
 profile=~/.bash_profile
 
 trap '' SIGINT SIGQUIT SIGTSTP
@@ -46,23 +46,20 @@ makeInstall() {
 		cp $profile $profile.bak
 	fi
 	
-	echo -e "\nalias sam=$sam\nsam" >> $profile
+	echo -e "\nalias sam=$samPath\$samFile\nsam" >> $profile
 }
 
 makeUninstall() {
-	sam=$dir/$self
-	profile=~/.bash_profile
-	
 	sed -i '' '/sam/d' $profile
 	# sed -i '/sam/d' $profile
 }
 
 makeUpdate() {
-	curl -so "./$self" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$self" && sudo chmod +x "./$self" && pressEnter && exec "./$self"
+	curl -so "./$samFile" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$samFile" && sudo chmod +x "./$samFile" && pressEnter && exec "./$samFile"
 }
 
 showAbout() {
-	echo "Version $samVersion ($self)"
+	echo "Version $samVersion ($samFile)"
 }
 
 showMenu() {
