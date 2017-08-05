@@ -61,7 +61,7 @@ showAbout() {
 showMenu() {
 	clear
 	echo "${bold}${invert} Server Administration Menu $samVersion ${normal}" && nl
-	echo "Host: $(hostname) ($(cat /etc/issue))"
+	echo "Host: $(hostname) ($(cat /etc/issue.net))"
 	echo "Status: $(uptime)" 
 	
 	# Menu
