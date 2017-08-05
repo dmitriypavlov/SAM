@@ -2,10 +2,10 @@
 
 samVersion="2.1"
 
-dir="${0%/*}" && cd $dir
+dir="${0%/*}" && cd dir
 self="${0##*/}"
 
-trap '' SIGINT SIGQUIT SIGTSTP
+#trap '' SIGINT SIGQUIT SIGTSTP
 
 # functions
 
@@ -33,12 +33,29 @@ makeSure() {
 showHelp() {
 	clear && echo -e "${bold}Additional tasks${normal}
 	
+	install)	Install to .bash_profile
+	uninstall)	Uninstall from .bash_profile
 	update)		Perform online update
 	about)		About SAM"
 }
 
 tryInstall() {
- echo "."
+	sam=$dir/$self
+	profile=~/.bash_profile
+	
+	if [ ! -e $profile.bak ]; then
+		cp $profile $profile.bak
+	fi
+	
+	echo -e "\nalias sam=$sam\nsam" >> $profile
+}
+
+tryUninstall() {
+	sam=$dir/$self
+	profile=~/.bash_profile
+	
+	sed -i '' '/sam/d' $profile
+	# sed -i '/sam/d' $profile
 }
 
 tryUpdate() {
@@ -57,15 +74,7 @@ showMenu() {
 	
 	# Menu
 	echo -e "
-	1) File manager		10) Task 10
-	2) CPU load		11) Task 11
-	3) Disk load		12) Task 12
-	4) Google DNS		13) Task 13
-	5) Task 5		14) Task 14
-	6) Task 6		15) Task 15
-	7) Task 7		16) Task 16
-	8) Task 8		17) Task 17
-	9) Task 9		18) Task 18
+	1) File manager		2) Google DNS
 	
 	0) Exit			?) Help
 	"
@@ -77,13 +86,13 @@ selectTask(){
 	
 		# Tasks
 		1) makeSure && mc && pressEnter;;
-		2) makeSure && top && pressEnter;;
-		3) makeSure && iotop && pressEnter;;
-		4) makeSure && ping 8.8.8.8 && pressEnter;;
+		2) makeSure && ping 8.8.8.8 && pressEnter;;
 		
 		0) makeSure && exit 0;;
-		?) showHelp && pressEnter;;
+		\?) showHelp && pressEnter;;
 		
+		install) makeSure && tryInstall;;
+		uninstall) makeSure && tryUninstall;;
 		update) makeSure && tryUpdate;;
 		about) showAbout && pressEnter;;
 		q) exit 0;;
