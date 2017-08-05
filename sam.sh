@@ -17,19 +17,19 @@ nl() {
 	printf "\n"
 }
 
-pressEnter() {
+uiEnter() {
 	nl && read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
 }
 
-makeSure() {
+uiSure() {
 	local sure && read -p "${bold}Are you sure? [Y/n]:${normal} " sure
 	case $sure in
-		[yY]) clear && return 0;;
-		*) echo "${bold}${red}Task aborted${normal}" && pressEnter && return 1
+		([yY]) clear && return 0;;
+		(*) echo "${bold}${red}Task aborted${normal}" && uiEnter && return 1
 	esac
 }
 
-showHelp() {
+uiHelp() {
 	clear && echo "${bold}${invert} Additional tasks ${normal}
 	
 	install		Install to $profile
@@ -38,24 +38,24 @@ showHelp() {
 	about		About SAM"
 }
 
-makeInstall() {
+sysInstall() {
 	echo -e "alias sam='$samPath/$samFile'\nsam" >> $profile
 	sudo chmod +x "$samPath/$samFile"
 }
 
-makeUninstall() {
+sysUninstall() {
 	sed -i '/sam/d' $profile || sed -i '' '/sam/d' $profile # macOS
 }
 
-makeUpdate() {
-	curl -so "$samPath/$samFile" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$samFile" && pressEnter && exec "$samPath/$samFile"
+sysUpdate() {
+	curl -so "$samPath/$samFile" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$samFile" && uiEnter && exec "$samPath/$samFile"
 }
 
-showAbout() {
-	echo "Version $samVersion ($samFile)"
+uiAbout() {
+	echo "Version $samVersion ($samPath/$samFile)"
 }
 
-showMenu() {
+uiMenu() {
 	clear
 	echo "${bold}${invert} Server Administration Menu $samVersion ${normal}" && nl
 	echo "Host: $(hostname) ($(cat /etc/issue.net))"
@@ -68,20 +68,20 @@ showMenu() {
 	"
 }
 
-selectTask() {
+uiTask() {
 	local task && read -p "${bold}Select task:${normal} " task
 	case $task in
 		
 		# Tasks
-		(1) makeSure && echo "Task 1 selected" && pressEnter;;
-		(2) makeSure && echo "Task 2 selected" && pressEnter;;
+		(1) uiSure && echo "Task 1 selected" && uiEnter;;
+		(2) uiSure && echo "Task 2 selected" && uiEnter;;
 		
-		(0) makeSure && exit 0;;
-		("?") showHelp && pressEnter;;
-		("install") makeSure && makeInstall;;
-		("uninstall") makeSure && makeUninstall;;
-		("update") makeSure && makeUpdate;;
-		("about") showAbout && pressEnter;;
+		(0) uiSure && exit 0;;
+		("?") uiHelp && uiEnter;;
+		("install") uiSure && sysInstall;;
+		("uninstall") uiSure && sysUninstall;;
+		("update") uiSure && sysUpdate;;
+		("about") uiAbout && uiEnter;;
 		
 		(*) echo "${bold}${red}Pardon?${normal}" && sleep 1
 	esac
@@ -93,5 +93,5 @@ trap '' SIGINT SIGQUIT SIGTSTP
 
 while true
 do
- 	showMenu && selectTask
+ 	uiMenu && uiTask
 done
