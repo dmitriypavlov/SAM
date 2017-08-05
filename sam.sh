@@ -1,10 +1,10 @@
 #/bin/bash
 
-samVersion="2.1"
+samVersion="2.2"
 samPath="${0%/*}"
 samFile="${0##*/}"
 
-profile=~/.bash_profile
+profile=~/.profile
 
 # functions
 
