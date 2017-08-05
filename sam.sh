@@ -68,30 +68,27 @@ showMenu() {
 	"
 }
 
-selectTask(){
+selectTask() {
 	local task && read -p "${bold}Select task:${normal} " task
 	case $task in
-	
+		
 		# Tasks
-		1) makeSure && echo "Task 1 selected" && pressEnter;;
-		2) makeSure && echo "Task 2 selected" && pressEnter;;
+		(1) makeSure && echo "Task 1 selected" && pressEnter;;
+		(2) makeSure && echo "Task 2 selected" && pressEnter;;
 		
-		0) makeSure && exit 0;;
-		\?) showHelp && pressEnter;;
+		(0) makeSure && exit 0;;
+		("?") showHelp && pressEnter;;
+		("install") makeSure && makeInstall;;
+		("uninstall") makeSure && makeUninstall;;
+		("update") makeSure && makeUpdate;;
+		("about") showAbout && pressEnter;;
 		
-		install) makeSure && makeInstall;;
-		uninstall) makeSure && makeUninstall;;
-		update) makeSure && makeUpdate;;
-		about) showAbout && pressEnter;;
-		q) exit 0;;
-		
-		*) echo "${bold}${red}Pardon?${normal}" && sleep 1
+		(*) echo "${bold}${red}Pardon?${normal}" && sleep 1
 	esac
 }
  
 # init 
 
-cd $samPath
 trap '' SIGINT SIGQUIT SIGTSTP
 
 while true
