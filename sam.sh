@@ -2,8 +2,12 @@
 
 samVersion="2.1"
 
+
+dir="${0%/*}"
 self="${0##*/}"
-cd "${0%/*}"
+
+cd dir
+
 trap '' SIGINT SIGQUIT SIGTSTP
 
 # functions
@@ -34,6 +38,10 @@ showHelp() {
 	
 	update)		Perform online update
 	about)		About SAM"
+}
+
+tryInstall() {
+ echo "."
 }
 
 tryUpdate() {
