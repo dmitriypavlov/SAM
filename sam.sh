@@ -39,10 +39,7 @@ showHelp() {
 }
 
 makeInstall() {
-	if [ ! -e $profile.bak ]; then
-		cp $profile $profile.bak
-	fi
-	echo -e "\nalias sam=\"'$samPath/$samFile'\"\nsam" >> $profile
+	echo -e "alias sam=\"'$samPath/$samFile'\"\nsam" >> $profile
 	sudo chmod +x "$samPath/$samFile"
 }
 
@@ -66,8 +63,8 @@ showMenu() {
 	
 	# Menu
 	echo "
-	?) Help		0) Exit
-	1) Task 1	2) Task 2
+	?. Help		0. Exit
+	1. Task 1	2. Task 2
 	"
 }
 
