@@ -1,6 +1,6 @@
 #/bin/bash
 
-samVersion="2.2"
+samVersion="2.2-old"
 samPath="${0%/*}"
 samFile="${0##*/}"
 
@@ -32,10 +32,10 @@ makeSure() {
 showHelp() {
 	clear && echo -e "${bold}Additional tasks${normal}
 	
-	install)	Install to .bash_profile
-	uninstall)	Uninstall from .bash_profile
-	update)		Perform online update
-	about)		About SAM"
+	install		Install to .bash_profile
+	uninstall	Uninstall from .bash_profile
+	update		Perform online update
+	about		About SAM"
 }
 
 makeInstall() {
