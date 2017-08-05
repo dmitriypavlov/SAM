@@ -51,7 +51,7 @@ makeUninstall() {
 }
 
 makeUpdate() {
-	curl -so "./$samFile" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$samFile" && sudo chmod +x "./$samFile" && pressEnter && exec "./$samFile"
+	curl -so "$samPath/$samFile" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$samFile" && sudo chmod +x "$samPath/$samFile" && pressEnter && exec "$samPath/$samFile"
 }
 
 showAbout() {
