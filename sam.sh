@@ -17,6 +17,10 @@ nl() {
 	printf "\n"
 }
 
+uiTitle() {
+	echo -n -e "\033k$1\033\\"
+}
+
 uiEnter() {
 	nl && read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
 }
@@ -89,6 +93,7 @@ uiTask() {
  
 # init 
 
+uiTitle "SAM @ $(hostname -s)"
 trap '' SIGINT SIGQUIT SIGTSTP
 
 while true
