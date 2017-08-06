@@ -61,9 +61,8 @@ uiAbout() {
 
 uiMenu() {
 	clear
-	echo "${bold}${invert} Server Administration Menu $samVersion ${normal}" && nl
+	echo "${bold}${invert} Server Administration Menu ${normal}" && nl
 	echo "Host: $(hostname) ($(cat /etc/issue.net))"
-	echo "Status: $(uptime)" 
 	
 	# Menu
 	echo "
