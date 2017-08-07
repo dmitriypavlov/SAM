@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-samVersion="2.2"
+samVersion="0.3-dev"
 samPath="${0%/*}"
 samFile="${0##*/}"
 
@@ -34,7 +34,8 @@ uiSure() {
 }
 
 uiHelp() {
-	clear && echo "${bold}${invert} Additional tasks ${normal}
+	clear
+	echo "${bold}${invert} Additional tasks ${normal}
 	
 	install		Install to $profile
 	uninstall	Uninstall from $profile
@@ -43,12 +44,14 @@ uiHelp() {
 }
 
 sysInstall() {
-	echo -e "alias sam='$samPath/$samFile'\nsam" >> $profile
 	sudo chmod +x "$samPath/$samFile"
+	if ! grep -q "#autosam" "$profile"; then
+		echo -e "alias sam='$samPath/$samFile' #autosam\nsam #autosam" >> "$profile"
+	fi
 }
 
 sysUninstall() {
-	sed -i '/sam/d' $profile || sed -i '' '/sam/d' $profile # macOS
+	sed -i "/#autosam/d" $profile || sed -i "" "/#autosam/d" $profile # macOS
 }
 
 sysUpdate() {
@@ -77,10 +80,20 @@ uiTask() {
 	case $task in
 		
 		# Tasks
-		(1) uiSure && echo "Task 1 selected" && uiEnter;;
-		(2) uiSure && echo "Task 2 selected" && uiEnter;;
+		(1) {
+			uiSure && 
+			echo "Task 1 selected" &&
+			uiEnter
+		};;
+		
+		(2) {
+			uiSure &&
+			echo "Task 2 selected" &&
+			uiEnter
+		};;
 		
 		(0) uiSure && exit 0;;
+		
 		("?") uiHelp && uiEnter;;
 		("install") uiSure && sysInstall;;
 		("uninstall") uiSure && sysUninstall;;
