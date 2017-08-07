@@ -70,13 +70,12 @@ uiMenu() {
 	
 	# Menu
 	echo "
-	?. Help		0. Exit
 	1. Task 1	2. Task 2
 	"
 }
 
 uiTask() {
-	local task && read -p "${bold}Select task:${normal} " task
+	local task && read -p "${bold}Select task [help, exit]:${normal} " task
 	case $task in
 		
 		# Tasks
@@ -92,9 +91,8 @@ uiTask() {
 			uiEnter
 		};;
 		
-		(0) uiSure && exit 0;;
-		
-		("?") uiHelp && uiEnter;;
+		("exit") uiSure && exit 0;;
+		("help") uiHelp && uiEnter;;
 		("install") uiSure && sysInstall;;
 		("uninstall") uiSure && sysUninstall;;
 		("update") uiSure && sysUpdate;;
