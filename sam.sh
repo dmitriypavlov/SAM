@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-samVersion="0.3-dev"
+samVersion="0.4b"
 samUpdate="https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh"
 
 # functions
@@ -14,30 +14,38 @@ red=$(tput setaf 1)
 invert=$(tput rev)
 normal=$(tput sgr0)
 
-nl() {
+newline() {
 	printf "\n"
 }
 
-uiTitle() {
+samTitle() {
 	echo -n -e "\033k$1\033\\"
 }
 
-uiEnter() {
-	nl && read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
+samPause() {
+	newline
+	read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
 }
 
-uiSure() {
-	local sure && read -p "${bold}Are you sure? [Y/n]:${normal} " sure
-	case $sure in
-		([yY]) clear && return 0;;
-		(*) echo "${bold}${red}Task aborted${normal}" && uiEnter && return 1
-	esac
-}
-
-uiHelp() {
-	clear
-	echo "${bold}${invert} Additional tasks ${normal}
+samConfirm() {
+	newline
+	local confirm && read -p "${bold}Are you sure? [Y/n]:${normal} " confirm
 	
+	if [[ "$confirm" == "Y" || "$confirm" == "y" ]]; then
+		clear
+		return 0
+	else
+		echo "${bold}${red}Task aborted${normal}"
+		samPause
+		return 1
+	fi
+}
+
+samHelp() {
+	clear
+	echo "${bold}${invert} SAM Help ${normal}
+	
+	exit		Exit SAM
 	install		Install to $profile
 	uninstall	Uninstall from $profile
 	update		Perform online update
@@ -45,74 +53,70 @@ uiHelp() {
 }
 
 isMac() {
-	if [ $(uname -s) == "Darwin" ]; then return 0
-	else return 1; fi
+	if [[ $(uname -s) == "Darwin" ]]; then
+		return 0
+	else
+		return 1
+	fi
 }
 
-sysInstall() {
+samInstall() {
 	sudo chmod +x "$samPath/$samFile"
 	if ! grep -q "#autosam" "$profile"; then
 		echo -e "alias sam='$samPath/$samFile' #autosam\nsam #autosam" >> "$profile"
 	fi
 }
 
-sysUninstall() {
+samUninstall() {
 	isMac && sed -i "" "/#autosam/d" $profile || sed -i "/#autosam/d" $profile
 }
 
-sysUpdate() {
+samUpdate() {
 	isMac && curl -s -o "$samPath/$samFile" "$samUpdate" || wget -q -O "$samPath/$samFile" "$samUpdate"
-	uiEnter && exec "$samPath/$samFile"
+	samPause && exec "$samPath/$samFile"
 }
 
-uiAbout() {
-	echo "Version $samVersion ($samPath/$samFile)"
-}
-
-uiMenu() {
+samAbout() {
 	clear
-	echo "${bold}${invert} Server Administration Menu $samVersion ${normal}" && nl
-	echo "Host: $(hostname) ($(cat /etc/issue.net))"
-	echo "Status: $(uptime)" 
-	
-	# Menu
-	echo "
-	1. Task 1	2. Task 2
-	"
+	echo "${bold}${invert} About SAM ${normal}"
+	newline
+	echo "version $samVersion ($samPath/$samFile)"
 }
 
-uiTask() {
-	local task && read -p "${bold}Select task [help, exit]:${normal} " task
-		
-	case $task in		
-		1)
-			uiSure &&
-			echo "Task 1 selected" &&
-			uiEnter
-		;;
-		
-		2)
-			uiSure &&
-			echo "Task 2 selected" &&
-			uiEnter
-		;;
+samBanner() {
+	clear
+	echo "${bold}${invert} Server Administration Menu @ $(hostname) ${normal}"
+}
+
+samTask() { 
 	
-		'exit') uiSure && exit 0;;
-		'help') uiHelp && uiEnter;;
-		'install') uiSure && sysInstall;;
-		'uninstall') uiSure && sysUninstall;;
-		'update') uiSure && sysUpdate;;
-		'about') uiAbout && uiEnter;;
-		*) echo "${bold}${red}Pardon?${normal}" && sleep 1
-	esac
+	sam_?() { sam_help; }
+	sam_exit() { samConfirm && exit 0; }
+	sam_help() { samHelp && samPause; }
+	sam_install() { samConfirm && samInstall; }
+	sam_uninstall() { samConfirm && samUninstall; }
+	sam_update() { samConfirm && samUpdate; }
+	sam_about() { samAbout && samPause; }
+	
+	source "$samPath/$samFile.inc"
+	
+	read -p "${bold}Enter task:${normal} " task
+	
+	if type "sam_$task" &> /dev/null; then
+		"sam_$task"
+	else
+		echo "${bold}${red}Task error${normal}"
+		sleep 1
+	fi
 }
  
 # init 
 
-uiTitle "SAM @ $(hostname -s)"
+samTitle "SAM @ $(hostname -s)"
 trap '' SIGINT SIGQUIT SIGTSTP
 
 while true
 do
- 	uiMenu && uiTask
+ 	samBanner
+ 	samTask
 done
