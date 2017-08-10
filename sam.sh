@@ -57,7 +57,7 @@ sysInstall() {
 }
 
 sysUninstall() {
-	isMac sed -i "" "/#autosam/d" $profile || sed -i "/#autosam/d" $profile
+	isMac && sed -i "" "/#autosam/d" $profile || sed -i "/#autosam/d" $profile
 }
 
 sysUpdate() {
