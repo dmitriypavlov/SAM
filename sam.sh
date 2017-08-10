@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# TODO
+# default tasklist download from github
+# cli mode (task as parameter)
+# cron mode
+
 # variables
 
 samVersion="0.4b"
@@ -53,12 +58,14 @@ samHelp() {
 samInstall() {
 	sudo chmod +x "$samPath/$samFile"
 	if ! grep -q "#autosam" "$profile"; then
-		echo -e "alias sam='$samPath/$samFile' #autosam\nsam #autosam" >> "$profile"
+		echo -e "alias sam='$samPath/$samFile' #autosam\nsam #autosam" >> "$profile" &&
+		echo "Installed to $profile" && samPause
 	fi
 }
 
 samUninstall() {
-	isMac && sed -i "" "/#autosam/d" $profile || sed -i "/#autosam/d" $profile
+	isMac && sed -i "" "/#autosam/d" $profile || sed -i "/#autosam/d" $profile &&
+	echo "Uninstalled from $profile" && samPause
 }
 
 samUpdate() {
@@ -97,7 +104,7 @@ samTask() {
 	
 	source "$samPath/$samFile.inc"
 	
-	read -p "${bold}Enter task (?):${normal} " task
+	read -p "${bold}Enter task [?]:${normal} " task
 	
 	if type "sam_$task" &> /dev/null; then
 		"sam_$task"
