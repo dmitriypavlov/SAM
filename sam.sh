@@ -44,6 +44,11 @@ uiHelp() {
 	about		About SAM"
 }
 
+isMac() {
+	if [ $(uname -s) == "Darwin" ]; then return 0
+	else return 1; fi
+}
+
 sysInstall() {
 	sudo chmod +x "$samPath/$samFile"
 	if ! grep -q "#autosam" "$profile"; then
@@ -56,7 +61,7 @@ sysUninstall() {
 }
 
 sysUpdate() {
-	wget -q -O "$samPath/$samFile" "$samUpdate" || curl -s -o "$samPath/$samFile" "$samUpdate"
+	isMac && curl -s -o "$samPath/$samFile" "$samUpdate" || wget -q -O "$samPath/$samFile" "$samUpdate"
 	uiEnter && exec "$samPath/$samFile"
 }
 
