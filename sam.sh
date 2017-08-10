@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
+# variables
+
 samVersion="0.4b"
 samUpdate="https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh"
+profile=~/.profile
 
-# functions
+# utilities
 
 samPath="${0%/*}"
 samFile="${0##*/}"
-profile=~/.profile
 
 bold=$(tput bold)
 red=$(tput setaf 1)
@@ -22,42 +24,29 @@ samTitle() {
 	echo -n -e "\033k$1\033\\"
 }
 
-samPause() {
-	newline
-	read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
-}
-
-samConfirm() {
-	newline
-	local confirm && read -p "${bold}Are you sure? [Y/n]:${normal} " confirm
-	
-	if [[ "$confirm" == "Y" || "$confirm" == "y" ]]; then
-		clear
-		return 0
-	else
-		echo "${bold}${red}Task aborted${normal}"
-		samPause
-		return 1
-	fi
-}
-
-samHelp() {
-	clear
-	echo "${bold}${invert} SAM Help ${normal}
-	
-	exit		Exit SAM
-	install		Install to $profile
-	uninstall	Uninstall from $profile
-	update		Perform online update
-	about		About SAM"
-}
-
 isMac() {
 	if [[ $(uname -s) == "Darwin" ]]; then
 		return 0
 	else
 		return 1
 	fi
+}
+
+# functions
+
+samAbout() {
+	clear && echo "${bold}${invert} About SAM ${normal}" && newline
+	echo "version $samVersion ($samPath/$samFile)"
+}
+
+samHelp() {
+	clear && echo "${bold}${invert} SAM Help ${normal}
+
+	about		About SAM
+	install		Install to $profile
+	uninstall	Uninstall from $profile
+	update		Perform online update
+	exit		Exit SAM"
 }
 
 samInstall() {
@@ -76,16 +65,23 @@ samUpdate() {
 	samPause && exec "$samPath/$samFile"
 }
 
-samAbout() {
-	clear
-	echo "${bold}${invert} About SAM ${normal}"
-	newline
-	echo "version $samVersion ($samPath/$samFile)"
+samPause() {
+	newline && read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
+}
+
+samConfirm() {
+	newline && local confirm && read -p "${bold}Are you sure? [Y/n]:${normal} " confirm
+	
+	if [[ "$confirm" == "Y" || "$confirm" == "y" ]]; then
+		clear && return 0
+	else
+		echo "${bold}${red}Task aborted${normal}"
+		samPause && return 1
+	fi
 }
 
 samBanner() {
-	clear
-	echo "${bold}${invert} Server Administration Menu @ $(hostname) ${normal}"
+	clear && echo "${bold}${invert} Server Administration Menu @ $(hostname) ${normal}"
 }
 
 samTask() { 
@@ -110,7 +106,7 @@ samTask() {
 	fi
 }
  
-# init 
+# main
 
 samTitle "SAM @ $(hostname -s)"
 trap '' SIGINT SIGQUIT SIGTSTP
