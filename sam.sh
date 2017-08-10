@@ -43,6 +43,7 @@ samHelp() {
 	clear && echo "${bold}${invert} SAM Help ${normal}
 
 	about		About SAM
+	help		This SAM Help
 	install		Install to $profile
 	uninstall	Uninstall from $profile
 	update		Perform online update
@@ -85,7 +86,7 @@ samBanner() {
 }
 
 samTask() { 
-	
+
 	sam_?() { sam_help; }
 	sam_exit() { samConfirm && exit 0; }
 	sam_help() { samHelp && samPause; }
@@ -96,7 +97,7 @@ samTask() {
 	
 	source "$samPath/$samFile.inc"
 	
-	read -p "${bold}Enter task:${normal} " task
+	read -p "${bold}Enter task (?):${normal} " task
 	
 	if type "sam_$task" &> /dev/null; then
 		"sam_$task"
