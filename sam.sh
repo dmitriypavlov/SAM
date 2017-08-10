@@ -84,24 +84,26 @@ uiMenu() {
 uiTask() {
 	local task && read -p "${bold}Select task [help, exit]:${normal} " task
 		
-	case $task in
-		(1) {
-			uiSure && echo "Task 1 selected"
+	case $task in		
+		1)
+			uiSure &&
+			echo "Task 1 selected" &&
 			uiEnter
-		};;
+		;;
 		
-		(2) {
-			uiSure && echo "Task 2 selected"
+		2)
+			uiSure &&
+			echo "Task 2 selected" &&
 			uiEnter
-		};;
+		;;
 	
-		("exit") uiSure && exit 0;;
-		("help") uiHelp && uiEnter;;
-		("install") uiSure && sysInstall;;
-		("uninstall") uiSure && sysUninstall;;
-		("update") uiSure && sysUpdate;;
-		("about") uiAbout && uiEnter;;
-		(*) echo "${bold}${red}Pardon?${normal}" && sleep 1
+		'exit') uiSure && exit 0;;
+		'help') uiHelp && uiEnter;;
+		'install') uiSure && sysInstall;;
+		'uninstall') uiSure && sysUninstall;;
+		'update') uiSure && sysUpdate;;
+		'about') uiAbout && uiEnter;;
+		*) echo "${bold}${red}Pardon?${normal}" && sleep 1
 	esac
 }
  
