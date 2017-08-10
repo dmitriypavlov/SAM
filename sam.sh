@@ -107,6 +107,7 @@ uiTask() {
  
 # init 
 
+cd $samPath
 uiTitle "SAM @ $(hostname -s)"
 trap '' SIGINT SIGQUIT SIGTSTP
 
