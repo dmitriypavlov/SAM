@@ -104,7 +104,7 @@ samTask() {
 	
 	source "$samPath/$samFile.inc"
 	
-	read -p "${bold}Enter task [?]:${normal} " task
+	read -p "${bold}Select task [?]:${normal} " task
 	
 	if type "sam_$task" &> /dev/null; then
 		"sam_$task"
