@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 samVersion="0.3-dev"
-samPath="${0%/*}"
-samFile="${0##*/}"
-
-profile=~/.profile
+samUpdate="https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh"
 
 # functions
+
+samPath="${0%/*}"
+samFile="${0##*/}"
+profile=~/.profile
 
 bold=$(tput bold)
 red=$(tput setaf 1)
@@ -55,7 +56,8 @@ sysUninstall() {
 }
 
 sysUpdate() {
-	curl -so "$samPath/$samFile" "https://raw.githubusercontent.com/dmitriypavlov/SAM/master/$samFile" && uiEnter && exec "$samPath/$samFile"
+	wget -q -O "$samPath/$samFile" "$samUpdate" || curl -s -o "$samPath/$samFile" "$samUpdate"
+	uiEnter && exec "$samPath/$samFile"
 }
 
 uiAbout() {
@@ -76,28 +78,24 @@ uiMenu() {
 
 uiTask() {
 	local task && read -p "${bold}Select task [help, exit]:${normal} " task
-	case $task in
 		
-		# Tasks
+	case $task in
 		(1) {
-			uiSure && 
-			echo "Task 1 selected" &&
+			uiSure && echo "Task 1 selected"
 			uiEnter
 		};;
 		
 		(2) {
-			uiSure &&
-			echo "Task 2 selected" &&
+			uiSure && echo "Task 2 selected"
 			uiEnter
 		};;
-		
+	
 		("exit") uiSure && exit 0;;
 		("help") uiHelp && uiEnter;;
 		("install") uiSure && sysInstall;;
 		("uninstall") uiSure && sysUninstall;;
 		("update") uiSure && sysUpdate;;
 		("about") uiAbout && uiEnter;;
-		
 		(*) echo "${bold}${red}Pardon?${normal}" && sleep 1
 	esac
 }

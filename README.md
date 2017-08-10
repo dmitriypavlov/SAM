@@ -9,8 +9,8 @@ Server Administration Menu (SAM) is a bash shellscript and a framework for creat
 * Simple menu expansion
 
 ### Installation
-`bash <(curl -Ls https://goo.gl/D5dPPD)`
+**Linux**
+`wget -q https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh && bash ./sam.sh`
 
-**or**
-
-`bash <(curl -s https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh)`
+**macOS**
+`curl -s -O https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh && bash ./sam.sh`
