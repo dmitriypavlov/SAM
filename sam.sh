@@ -94,6 +94,7 @@ samHelp() {
 	install		Install to $profile
 	uninstall	Uninstall from $profile
 	update		Perform online update
+	edit		Edit $samInc
 	exit		Exit SAM"
 }
 
@@ -107,14 +108,18 @@ samDefault() {
 	fi
 }
 
-samTask() { 
+samEdit() {
+	nano "$samPath/$samInc" && samInit
+}
 
+samTask() { 
 	sam_?() { sam_help; }
 	sam_exit() { samConfirm && exit 0; }
 	sam_help() { samHelp; samPause; }
 	sam_install() { samConfirm && samInstall; }
 	sam_uninstall() { samConfirm && samUninstall; }
 	sam_update() { samConfirm && samUpdate; }
+	sam_edit() { samEdit; }
 	sam_about() { samAbout; samPause; }
 	
 	source "$samPath/$samInc" 2> /dev/null || echo -e "\n${bold}${red}$samPath/$samInc source error!${normal}\n"

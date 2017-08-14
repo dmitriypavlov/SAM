@@ -2,9 +2,8 @@ echo "
 	1. File manager
 	2. Reboot system
 	3. Shutdown system
-	4. Update system (apt)
-	5. Update system (yum)
-	6. Compact storage
+	4. Update system
+	5. Compact storage
 "
 
 sam_1() {
