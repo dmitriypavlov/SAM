@@ -74,7 +74,7 @@ samConfirm() {
 }
 
 samWait() {
-	newline; echo "Please wait..."
+	echo "Please wait..."
 }
 
 samPause() {
