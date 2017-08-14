@@ -27,14 +27,8 @@ sam_4() {
 }
 
 sam_5() {
-	sudo yum update && yum upgrade && yum clean all
-	samPause
-}
-
-sam_6() {
 	samConfirm &&
 	samWait
-	sudo dd if="/dev/zero" of="/tmp/zero"
-	rm -f "/tmp/zero"
+	sudo dd if="/dev/zero" of="/tmp/zero"; rm -f "/tmp/zero"
 	samPause
 }
