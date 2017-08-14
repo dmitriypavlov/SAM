@@ -29,6 +29,6 @@ sam_4() {
 sam_5() {
 	samConfirm &&
 	samWait
-	sudo dd if="/dev/zero" of="/tmp/zero"; rm -f "/tmp/zero"
+	sudo dd if="/dev/zero" of="/tmp/zero" || rm -f "/tmp/zero"
 	samPause
 }
