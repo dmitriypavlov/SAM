@@ -15,7 +15,8 @@ profile=~/.profile
 # utilities
 
 samPath="${0%/*}"
-samFile="${0##*/}"
+samSelf="${0##*/}"
+samInc="${samDefault##*/}"
 
 bold=$(tput bold)
 red=$(tput setaf 1)
@@ -42,7 +43,7 @@ isMac() {
 
 samAbout() {
 	clear; echo "${bold}${invert} About SAM ${normal}"; newline
-	echo "version $samVersion ($samPath/$samFile)"
+	echo "version $samVersion ($samPath/$samSelf)"
 }
 
 samHelp() {
@@ -57,16 +58,10 @@ samHelp() {
 }
 
 samInstall() {
-	sudo chmod +x "$samPath/$samFile"
+	sudo chmod +x "$samPath/$samSelf"
 	if ! grep -q "#autosam" "$profile"; then
-		echo -e "alias sam='$samPath/$samFile' #autosam\nsam #autosam" >> "$profile" &&
+		echo -e "alias sam='$samPath/$samSelf' #autosam\nsam #autosam" >> "$profile" &&
 		echo "Installed to $profile"; samPause
-	fi
-}
-
-samDefault() {
-	if [ ! -e "$samPath/sam.inc" ]; then
-		isMac && curl -s -o "$samPath/sam.inc" "$samDefault" || wget -q -O "$samPath/sam.inc" "$samDefault"
 	fi
 }
 
@@ -76,8 +71,8 @@ samUninstall() {
 }
 
 samUpdate() {
-	isMac && curl -s -o "$samPath/$samFile" "$samUpdate" || wget -q -O "$samPath/$samFile" "$samUpdate"
-	samPause; exec "$samPath/$samFile"
+	isMac && curl -s -o "$samPath/$samSelf" "$samUpdate" || wget -q -O "$samPath/$samSelf" "$samUpdate"
+	samPause; exec "$samPath/$samSelf"
 }
 
 samPause() {
@@ -99,6 +94,12 @@ samBanner() {
 	clear; echo "${bold}${invert} Server Administration Menu @ $(hostname) ${normal}"
 }
 
+samDefault() {
+	if [ ! -e "$samPath/$samInc" ]; then
+		isMac && curl -s -o "$samPath/$samInc" "$samDefault" || wget -q -O "$samPath/$samInc" "$samDefault"
+	fi
+}
+
 samTask() { 
 
 	sam_?() { sam_help; }
@@ -109,7 +110,7 @@ samTask() {
 	sam_update() { samConfirm && samUpdate; }
 	sam_about() { samAbout; samPause; }
 	
-	source "$samPath/$samFile.inc"
+	source "$samPath/$samInc"
 	
 	read -p "${bold}Select task [?]:${normal} " task
 	
@@ -123,9 +124,8 @@ samTask() {
  
 # main
 
-samTitle "SAM @ $(hostname -s)"
 trap '' SIGINT SIGQUIT SIGTSTP
-
+samTitle "SAM @ $(hostname -s)"
 samDefault
 
 while true
