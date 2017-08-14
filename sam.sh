@@ -9,6 +9,7 @@
 
 samVersion="0.4b"
 samUpdate="https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh"
+samDefault="https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.inc"
 profile=~/.profile
 
 # utilities
@@ -60,6 +61,12 @@ samInstall() {
 	if ! grep -q "#autosam" "$profile"; then
 		echo -e "alias sam='$samPath/$samFile' #autosam\nsam #autosam" >> "$profile" &&
 		echo "Installed to $profile"; samPause
+	fi
+}
+
+samDefault() {
+	if [ ! -e "$samPath/sam.inc" ]; then
+		isMac && curl -s -o "$samPath/sam.inc" "$samDefault" || wget -q -O "$samPath/sam.inc" "$samDefault"
 	fi
 }
 
@@ -118,6 +125,8 @@ samTask() {
 
 samTitle "SAM @ $(hostname -s)"
 trap '' SIGINT SIGQUIT SIGTSTP
+
+samDefault
 
 while true
 do
