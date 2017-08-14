@@ -13,9 +13,7 @@ Server Administration Menu (SAM) is a bash shellscript and a framework for creat
 ### Customization
 SAM can be expanded with custom bash functions in **sam.inc** (downloaded automatically if not found):
 
-`sam_ID() {
-	samConfirm && echo "Hello, world"
-}`
+`sam_ID() { samConfirm && echo "Hello, world"; }`
 
 where **ID** is a unique number which triggers particular function start when selected in menu prompt. 
 
