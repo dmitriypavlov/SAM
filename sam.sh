@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
 # TODO
-# default tasklist download from github
 # cli mode (task as parameter)
 # cron mode
 
 # variables
 
-samVersion="0.4b"
+samVersion="0.5"
 samUpdate="https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.sh"
 samDefault="https://raw.githubusercontent.com/dmitriypavlov/SAM/master/sam.inc"
 profile=~/.profile
@@ -41,20 +40,8 @@ isMac() {
 
 # functions
 
-samAbout() {
-	clear; echo "${bold}${invert} About SAM ${normal}"; newline
-	echo "version $samVersion ($samPath/$samSelf)"
-}
-
-samHelp() {
-	clear; echo "${bold}${invert} SAM Help ${normal}
-
-	about		About SAM
-	help		This SAM Help
-	install		Install to $profile
-	uninstall	Uninstall from $profile
-	update		Perform online update
-	exit		Exit SAM"
+samInit() {
+	exec "$samPath/$samSelf"
 }
 
 samInstall() {
@@ -72,11 +59,7 @@ samUninstall() {
 
 samUpdate() {
 	isMac && curl -s -o "$samPath/$samSelf" "$samUpdate" || wget -q -O "$samPath/$samSelf" "$samUpdate"
-	samPause; exec "$samPath/$samSelf"
-}
-
-samPause() {
-	newline; read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
+	samPause; samInit
 }
 
 samConfirm() {
@@ -86,8 +69,32 @@ samConfirm() {
 		clear; return 0
 	else
 		echo "${bold}${red}Task aborted${normal}"
-		samPause; return 1
+		samPause; samInit
 	fi
+}
+
+samWait() {
+	newline; echo "Please wait..."
+}
+
+samPause() {
+	newline; read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
+}
+
+samAbout() {
+	clear; echo "${bold}${invert} About SAM ${normal}"; newline
+	echo "version $samVersion ($samPath/$samSelf)"
+}
+
+samHelp() {
+	clear; echo "${bold}${invert} SAM Help ${normal}
+
+	about		About SAM
+	help		This SAM Help
+	install		Install to $profile
+	uninstall	Uninstall from $profile
+	update		Perform online update
+	exit		Exit SAM"
 }
 
 samBanner() {
@@ -110,7 +117,7 @@ samTask() {
 	sam_update() { samConfirm && samUpdate; }
 	sam_about() { samAbout; samPause; }
 	
-	source "$samPath/$samInc"
+	source "$samPath/$samInc" 2> /dev/null || echo -e "\n${bold}${red}$samPath/$samInc source error!${normal}\n"
 	
 	read -p "${bold}Select task [?]:${normal} " task
 	
