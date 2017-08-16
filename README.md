@@ -16,7 +16,10 @@ SAM can be expanded with custom bash functions in **sam.inc** (downloaded automa
 
 `sam_ID() { samConfirm && echo "Hello, world"; }`
 
-where **ID** is a unique number which triggers particular function start when selected in menu prompt. 
+where **ID** is a unique number which triggers particular function start when selected in menu prompt.
+
+### Requirements
+`bash` `wget || curl` `nano`
 
 ### Installation
 **Linux**
