@@ -44,16 +44,21 @@ samInit() {
 	exec "$samPath/$samSelf"
 }
 
+samProfile() {
+	nano "$profile"
+}
+
 samInstall() {
 	sudo chmod +x "$samPath/$samSelf"
 	if ! grep -q "#autosam" "$profile"; then
+		isMac && echo -e "alias sam=\"'$samPath/$samSelf'\" #autosam\nsam #autosam" >> "$profile" ||
 		echo -e "alias sam='$samPath/$samSelf' #autosam\nsam #autosam" >> "$profile" &&
 		echo "Installed to $profile"; samPause
 	fi
 }
 
 samUninstall() {
-	isMac && sed -i "" "/#autosam/d" $profile || sed -i "/#autosam/d" $profile &&
+	isMac && sed -i "" "/#autosam/d" "$profile" || sed -i "/#autosam/d" "$profile" &&
 	echo "Uninstalled from $profile"; samPause
 }
 
@@ -90,11 +95,12 @@ samHelp() {
 	clear; echo "${bold}${invert} SAM Help ${normal}
 
 	about		About SAM
-	help		This SAM Help
+	help		This help
+	profile		Edit $profile
 	install		Install to $profile
 	uninstall	Uninstall from $profile
-	update		Perform online update
-	edit		Edit $samInc
+	update		Online update $samPath/$samSelf
+	tasks		Edit $samPath/$samInc
 	exit		Exit SAM"
 }
 
@@ -108,19 +114,20 @@ samDefault() {
 	fi
 }
 
-samEdit() {
+samTasks() {
 	nano "$samPath/$samInc" && samInit
 }
 
 samTask() { 
-	sam_?() { sam_help; }
-	sam_exit() { samConfirm && exit 0; }
+	sam_about() { samAbout; samPause; }
 	sam_help() { samHelp; samPause; }
+	sam_?() { sam_help; }
+	sam_profile() { samProfile; }
 	sam_install() { samConfirm && samInstall; }
 	sam_uninstall() { samConfirm && samUninstall; }
 	sam_update() { samConfirm && samUpdate; }
-	sam_edit() { samEdit; }
-	sam_about() { samAbout; samPause; }
+	sam_tasks() { samTasks; }
+	sam_exit() { samConfirm && exit 0; }
 	
 	source "$samPath/$samInc" 2> /dev/null || echo -e "\n${bold}${red}$samPath/$samInc source error!${normal}\n"
 	
