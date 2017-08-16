@@ -3,12 +3,13 @@ Server Administration Menu (SAM) is a bash shellscript and a framework for creat
 ![SAM](https://raw.githubusercontent.com/dmitriypavlov/SAM/master/screenshot.png)
 
 ### Features
-* online update from GitHub
+* online update from URL
 * default menu download
 * simple task expansion
 * task confirmation
 * unexpected exit prevention
 * autostart and **sam** alias in bash profile
+* macOS compatibility
 
 ### Customization
 SAM can be expanded with custom bash functions in **sam.inc** (downloaded automatically if not found):
