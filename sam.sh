@@ -51,6 +51,7 @@ samUninstall() {
 }
 
 samUpdate() {
+	clear; samWait
 	wget -q -O "$samPath/$samSelf" "$samUpdate" 2> /dev/null || curl -s -o "$samPath/$samSelf" "$samUpdate"
 	samPause; samInit
 }
