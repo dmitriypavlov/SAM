@@ -18,6 +18,7 @@ revert() { printf "\e[?5l"; }
 bell() { printf "\a"; }
 newline() { printf "\n"; }
 title() { echo -n -e "\033k$1\033\\"; }
+label() { tput rev; echo " $1 "; tput sgr0; }
 bold=$(tput bold)
 red=$(tput setaf 1)
 reverse=$(tput rev)
@@ -51,7 +52,7 @@ samUninstall() {
 }
 
 samUpdate() {
-	wget -q -O "$samPath/$samSelf" "$samUpdate" 2> "/dev/null" || curl -s -o "$samPath/$samSelf" "$samUpdate"
+	wget -q -O "$samPath/$samSelf" "$samUpdate" 2> "/dev/null" || curl -s -o "$samPath/$samSelf" "$samUpdate" &&
 	samInit
 }
 
@@ -71,13 +72,13 @@ samWait() { echo "Please wait..."; }
 samPause() { newline; read -p "${bold}Press Enter to continue...${normal}" fackEnterKey; }
 
 samAbout() {
-	echo "${bold}${reverse} About SAM ${normal}"; newline
+	label "About SAM"; newline
 	echo "version $samVersion ($samPath/$samSelf)"
 }
 
 samHelp() {
-	echo "${bold}${reverse} SAM Help ${normal}
-
+	label "SAM Help"
+	echo "
 	about		About SAM
 	help		This help
 	profile		Edit $profile
@@ -89,7 +90,7 @@ samHelp() {
 }
 
 samBanner() {
-	clear; echo "${bold}${reverse} Server Administration Menu @ $(hostname) ${normal}"
+	clear; label "Server Administration Menu @ $(hostname)"
 }
 
 samDefault() {
