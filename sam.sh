@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO
-# cli mode (task as parameter)
-# cron mode
-
 # variables
 
 samVersion="0.5"
@@ -17,18 +13,15 @@ samPath="${0%/*}"
 samSelf="${0##*/}"
 samInc="${samDefault##*/}"
 
+invert() { printf "\e[?5h"; }
+revert() { printf "\e[?5l"; }
+bell() { printf "\a"; }
+newline() { printf "\n"; }
+title() { echo -n -e "\033k$1\033\\"; }
 bold=$(tput bold)
 red=$(tput setaf 1)
-invert=$(tput rev)
+reverse=$(tput rev)
 normal=$(tput sgr0)
-
-newline() {
-	printf "\n"
-}
-
-samTitle() {
-	echo -n -e "\033k$1\033\\"
-}
 
 isMac() {
 	if [[ $(uname -s) == "Darwin" ]]; then
@@ -40,13 +33,8 @@ isMac() {
 
 # functions
 
-samInit() {
-	exec "$samPath/$samSelf"
-}
-
-samProfile() {
-	nano "$profile"
-}
+samInit() { exec "$samPath/$samSelf"; }
+samProfile() { nano "$profile"; }
 
 samInstall() {
 	sudo chmod +x "$samPath/$samSelf"
@@ -73,26 +61,22 @@ samConfirm() {
 	if [[ "$confirm" == "Y" || "$confirm" == "y" ]]; then
 		clear; return 0
 	else
-		echo "${bold}${red}Task aborted${normal}"
+		bell; echo "${bold}${red}Task aborted${normal}"
 		samPause; samInit
 	fi
 }
 
-samWait() {
-	echo "Please wait..."
-}
+samWait() { echo "Please wait..."; }
 
-samPause() {
-	newline; read -p "${bold}Press Enter to continue...${normal}" fackEnterKey
-}
+samPause() { newline; read -p "${bold}Press Enter to continue...${normal}" fackEnterKey; }
 
 samAbout() {
-	clear; echo "${bold}${invert} About SAM ${normal}"; newline
+	clear; echo "${bold}${reverse} About SAM ${normal}"; newline
 	echo "version $samVersion ($samPath/$samSelf)"
 }
 
 samHelp() {
-	clear; echo "${bold}${invert} SAM Help ${normal}
+	clear; echo "${bold}${reverse} SAM Help ${normal}
 
 	about		About SAM
 	help		This help
@@ -105,7 +89,7 @@ samHelp() {
 }
 
 samBanner() {
-	clear; echo "${bold}${invert} Server Administration Menu @ $(hostname) ${normal}"
+	clear; echo "${bold}${reverse} Server Administration Menu @ $(hostname) ${normal}"
 }
 
 samDefault() {
@@ -114,13 +98,11 @@ samDefault() {
 	fi
 }
 
-samTasks() {
-	nano "$samPath/$samInc" && samInit
-}
+samTasks() { nano "$samPath/$samInc" && samInit; }
 
 samTask() { 
 	sam_about() { samAbout; samPause; }
-	sam_help() { samHelp; samPause; }
+	sam_help() { invert; samHelp; samPause; revert; }
 	sam_?() { sam_help; }
 	sam_profile() { samProfile; }
 	sam_install() { samConfirm && samInstall; }
@@ -136,7 +118,7 @@ samTask() {
 	if type "sam_$task" &> /dev/null; then
 		"sam_$task"
 	else
-		echo "${bold}${red}Task error${normal}"
+		bell; echo "${bold}${red}Task error${normal}"
 		sleep 1
 	fi
 }
@@ -144,7 +126,7 @@ samTask() {
 # main
 
 trap '' SIGINT SIGQUIT SIGTSTP
-samTitle "SAM @ $(hostname -s)"
+title "SAM @ $(hostname -s)"
 samDefault
 
 while true
