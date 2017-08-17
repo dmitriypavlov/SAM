@@ -4,6 +4,7 @@ echo "
 	3. Shutdown system
 	4. Update system
 	5. Compact storage
+	6. System resources
 "
 
 sam_1() {
@@ -25,4 +26,13 @@ sam_4() {
 sam_5() {
 	samWait
 	sudo dd if="/dev/zero" of="/tmp/zero" || rm -f "/tmp/zero"
+}
+
+sam_6() {
+	label "Uptime"; newline
+	uptime; newline
+	label "Memory"
+	free -m 2> $mute; newline
+	label "Storage"; newline
+	df -h
 }

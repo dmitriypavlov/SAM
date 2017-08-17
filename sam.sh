@@ -23,6 +23,7 @@ bold=$(tput bold)
 red=$(tput setaf 1)
 reverse=$(tput rev)
 normal=$(tput sgr0)
+mute="/dev/null"
 
 isMac() {
 	if [[ $(uname -s) == "Darwin" ]]; then
@@ -47,12 +48,12 @@ samInstall() {
 }
 
 samUninstall() {
-	sed -i "/#autosam/d" "$profile" 2> "/dev/null" || sed -i "" "/#autosam/d" "$profile" &&
+	sed -i "/#autosam/d" "$profile" 2> $mute || sed -i "" "/#autosam/d" "$profile" &&
 	echo "Uninstalled from $profile"
 }
 
 samUpdate() {
-	wget -q -O "$samPath/$samSelf" "$samUpdate" 2> "/dev/null" || curl -s -o "$samPath/$samSelf" "$samUpdate" &&
+	wget -q -O "$samPath/$samSelf" "$samUpdate" 2> $mute || curl -s -o "$samPath/$samSelf" "$samUpdate" &&
 	samInit
 }
 
@@ -96,7 +97,7 @@ samBanner() {
 samDefault() {
 	if [ ! -e "$samPath/$samInc" ]; then
 		clear; samWait
-		wget -q -O "$samPath/$samInc" "$samDefault" 2> "/dev/null" || curl -s -o "$samPath/$samInc" "$samDefault"
+		wget -q -O "$samPath/$samInc" "$samDefault" 2> $mute || curl -s -o "$samPath/$samInc" "$samDefault"
 	fi
 }
 
@@ -113,11 +114,11 @@ samTask() {
 	sam_tasks() { samTasks; }
 	sam_exit() { exit 0; }
 	
-	source "$samPath/$samInc" 2> "/dev/null" || echo -e "\n${bold}${red}$samPath/$samInc source error!${normal}\n"
+	source "$samPath/$samInc" 2> $mute || echo -e "\n${bold}${red}$samPath/$samInc source error!${normal}\n"
 	
 	read -p "${bold}Select task [?]:${normal} " task
 	
-	if type "sam_$task" &> "/dev/null"; then
+	if type "sam_$task" &> $mute; then
 		samConfirm &&
 		clear; "sam_$task"
 		samPause
