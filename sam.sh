@@ -46,14 +46,13 @@ samInstall() {
 }
 
 samUninstall() {
-	sed -i "/#autosam/d" "$profile" 2> /dev/null || sed -i "" "/#autosam/d" "$profile" &&
+	sed -i "/#autosam/d" "$profile" 2> "/dev/null" || sed -i "" "/#autosam/d" "$profile" &&
 	echo "Uninstalled from $profile"; samPause
 }
 
 samUpdate() {
-	clear; samWait
-	wget -q -O "$samPath/$samSelf" "$samUpdate" 2> /dev/null || curl -s -o "$samPath/$samSelf" "$samUpdate"
-	clear; samPause; samInit
+	wget -q -O "$samPath/$samSelf" "$samUpdate" 2> "/dev/null" || curl -s -o "$samPath/$samSelf" "$samUpdate"
+	samPause; samInit
 }
 
 samConfirm() {
@@ -96,7 +95,7 @@ samBanner() {
 samDefault() {
 	if [ ! -e "$samPath/$samInc" ]; then
 		clear; samWait
-		wget -q -O "$samPath/$samInc" "$samDefault" 2> /dev/null || curl -s -o "$samPath/$samInc" "$samDefault"
+		wget -q -O "$samPath/$samInc" "$samDefault" 2> "/dev/null" || curl -s -o "$samPath/$samInc" "$samDefault"
 	fi
 }
 
@@ -113,11 +112,11 @@ samTask() {
 	sam_tasks() { samTasks; }
 	sam_exit() { samConfirm && exit 0; }
 	
-	source "$samPath/$samInc" 2> /dev/null || echo -e "\n${bold}${red}$samPath/$samInc source error!${normal}\n"
+	source "$samPath/$samInc" 2> "/dev/null" || echo -e "\n${bold}${red}$samPath/$samInc source error!${normal}\n"
 	
 	read -p "${bold}Select task [?]:${normal} " task
 	
-	if type "sam_$task" &> /dev/null; then
+	if type "sam_$task" &> "/dev/null"; then
 		"sam_$task"
 	else
 		bell; echo "${bold}${red}Task error${normal}"
