@@ -41,18 +41,18 @@ samInstall() {
 	if ! grep -q "#autosam" "$profile"; then
 		isMac && echo -e "alias sam=\"'$samPath/$samSelf'\" #autosam\nsam #autosam" >> "$profile" ||
 		echo -e "alias sam='$samPath/$samSelf' #autosam\nsam #autosam" >> "$profile" &&
-		echo "Installed to $profile"; samPause
+		echo "Installed to $profile"
 	fi
 }
 
 samUninstall() {
 	sed -i "/#autosam/d" "$profile" 2> "/dev/null" || sed -i "" "/#autosam/d" "$profile" &&
-	echo "Uninstalled from $profile"; samPause
+	echo "Uninstalled from $profile"
 }
 
 samUpdate() {
 	wget -q -O "$samPath/$samSelf" "$samUpdate" 2> "/dev/null" || curl -s -o "$samPath/$samSelf" "$samUpdate"
-	samPause; samInit
+	samInit
 }
 
 samConfirm() {
@@ -71,12 +71,12 @@ samWait() { echo "Please wait..."; }
 samPause() { newline; read -p "${bold}Press Enter to continue...${normal}" fackEnterKey; }
 
 samAbout() {
-	clear; echo "${bold}${reverse} About SAM ${normal}"; newline
+	echo "${bold}${reverse} About SAM ${normal}"; newline
 	echo "version $samVersion ($samPath/$samSelf)"
 }
 
 samHelp() {
-	clear; echo "${bold}${reverse} SAM Help ${normal}
+	echo "${bold}${reverse} SAM Help ${normal}
 
 	about		About SAM
 	help		This help
@@ -102,22 +102,24 @@ samDefault() {
 samTasks() { nano "$samPath/$samInc" && samInit; }
 
 samTask() { 
-	sam_about() { samAbout; samPause; }
-	sam_help() { invert; samHelp; samPause; revert; }
+	sam_about() { samAbout; }
+	sam_help() { samHelp; }
 	sam_?() { sam_help; }
 	sam_profile() { samProfile; }
-	sam_install() { samConfirm && samInstall; }
-	sam_uninstall() { samConfirm && samUninstall; }
-	sam_update() { samConfirm && samUpdate; }
+	sam_install() { samInstall; }
+	sam_uninstall() { samUninstall; }
+	sam_update() { samUpdate; }
 	sam_tasks() { samTasks; }
-	sam_exit() { samConfirm && exit 0; }
+	sam_exit() { exit 0; }
 	
 	source "$samPath/$samInc" 2> "/dev/null" || echo -e "\n${bold}${red}$samPath/$samInc source error!${normal}\n"
 	
 	read -p "${bold}Select task [?]:${normal} " task
 	
 	if type "sam_$task" &> "/dev/null"; then
-		"sam_$task"
+		samConfirm &&
+		clear; "sam_$task"
+		samPause
 	else
 		bell; echo "${bold}${red}Task error${normal}"
 		sleep 1
