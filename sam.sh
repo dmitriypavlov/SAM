@@ -37,7 +37,7 @@ samInit() { exec "$samPath/$samSelf"; }
 samProfile() { nano "$profile"; }
 
 samInstall() {
-	sudo chmod +x "$samPath/$samSelf"
+	sudo chmod +x "$samPath/$samSelf"; clear
 	if ! grep -q "#autosam" "$profile"; then
 		isMac && echo -e "alias sam=\"'$samPath/$samSelf'\" #autosam\nsam #autosam" >> "$profile" ||
 		echo -e "alias sam='$samPath/$samSelf' #autosam\nsam #autosam" >> "$profile" &&
@@ -46,12 +46,12 @@ samInstall() {
 }
 
 samUninstall() {
-	isMac && sed -i "" "/#autosam/d" "$profile" || sed -i "/#autosam/d" "$profile" &&
+	sed -i "/#autosam/d" "$profile" 2> /dev/null || sed -i "" "/#autosam/d" "$profile" &&
 	echo "Uninstalled from $profile"; samPause
 }
 
 samUpdate() {
-	isMac && curl -s -o "$samPath/$samSelf" "$samUpdate" || wget -q -O "$samPath/$samSelf" "$samUpdate"
+	wget -q -O "$samPath/$samSelf" "$samUpdate" 2> /dev/null || curl -s -o "$samPath/$samSelf" "$samUpdate"
 	samPause; samInit
 }
 
@@ -94,7 +94,7 @@ samBanner() {
 
 samDefault() {
 	if [ ! -e "$samPath/$samInc" ]; then
-		isMac && curl -s -o "$samPath/$samInc" "$samDefault" || wget -q -O "$samPath/$samInc" "$samDefault"
+		wget -q -O "$samPath/$samInc" "$samDefault" 2> /dev/null || curl -s -o "$samPath/$samInc" "$samDefault"
 	fi
 }
 
