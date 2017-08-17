@@ -94,6 +94,7 @@ samBanner() {
 
 samDefault() {
 	if [ ! -e "$samPath/$samInc" ]; then
+		clear; samWait
 		wget -q -O "$samPath/$samInc" "$samDefault" 2> /dev/null || curl -s -o "$samPath/$samInc" "$samDefault"
 	fi
 }
