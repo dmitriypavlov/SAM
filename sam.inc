@@ -22,7 +22,7 @@ sam_3() {
 
 sam_4() {
 	samConfirm &&
-	sudo apt-get update && apt-get upgrade && apt-get dist-upgrade && apt-get autoremove && apt-get clean
+	sudo apt-get update -y && apt-get upgrade -y && apt-get dist-upgrade -y && apt-get autoremove -y && apt-get clean -y
 	samPause
 }
 
